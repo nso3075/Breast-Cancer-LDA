@@ -1,1 +1,1 @@
-# Breast-Cancer-LDA
+# Diabetes-LDA
