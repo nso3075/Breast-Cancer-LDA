@@ -1,0 +1,5 @@
+1. Look at how to make LDA
+2. Figure out how to clean dataset
+3. Break down needed work into smaller steps
+4. Figure out data visualization
+5. Figure out presentation
