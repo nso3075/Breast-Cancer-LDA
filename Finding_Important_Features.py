@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
-data = pd.read_csv("data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
+data = pd.read_csv("data/diabetes_012_health_indicators_BRFSS2015.csv")
 
 X = data.iloc[:, 1:]
 y = data.iloc[:, 0]

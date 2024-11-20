@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 # Loading the dataset
-data = pd.read_csv("data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
+data = pd.read_csv("data/diabetes_012_health_indicators_BRFSS2015.csv")
 
 
 X = data.iloc[:, 1:].values

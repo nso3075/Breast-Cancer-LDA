@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Loading the dataset
-data = pd.read_csv("data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
+data = pd.read_csv("data/diabetes_012_health_indicators_BRFSS2015.csv")
 
 
 # Separate features and labels
