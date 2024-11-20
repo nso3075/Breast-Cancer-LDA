@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Loading the dataset
-data = pd.read_csv("diabetes_012_health_indicators_BRFSS2015.csv")
+data = pd.read_csv("data/diabetes_012_health_indicators_BRFSS2015.csv")
 
 # Separate features and labels
 X = data.iloc[:, 1:].values # features are all the columns minus first column
@@ -13,6 +13,11 @@ y = data.iloc[:, 0].values # features are the first column (diabetes type)
 classes = np.unique(y)
 mean_vectors = {c: np.mean(X[y == c], axis=0) for c in classes}
 mean_overall = np.mean(X, axis=0)
+
+# normalizing the data: subtract the mean of each feature from each data point
+for row in X:
+    for col, _  in enumerate(row):
+        row[col] -= mean_overall[col]
 
 # Within-class scatter matrix
 num_features = X.shape[1] # num features is equal to number of columns
@@ -47,3 +52,37 @@ eigenvalues, eigenvectors = np.linalg.eig(new_mat)
 sorted_indices = np.argsort(-eigenvalues.real)
 eigvals = eigenvalues[sorted_indices].real
 eigvecs = eigenvectors[:, sorted_indices].real
+
+# project the data onto top two eigen values --> 2d projection = good for visualization
+W = eigvecs[:, :2]
+X_lda = X @ W
+
+blue_targets = X_lda[np.where(y == 0.0)]
+red_targets = X_lda[np.where(y == 1.0)]
+orange_targets = X_lda[np.where(y == 2.0)]
+
+plt.scatter(
+        blue_targets[:, 0],
+        blue_targets[:, 1],
+        marker="o",
+        facecolors="none",
+        edgecolors="blue",
+    )
+
+plt.scatter(
+        red_targets[:, 0],
+        red_targets[:, 1],
+        marker="o",
+        facecolors="none",
+        edgecolors="red",
+    )
+
+plt.scatter(
+        orange_targets[:, 0],
+        orange_targets[:, 1],
+        marker="o",
+        facecolors="none",
+        edgecolors="orange",
+    )
+
+plt.savefig("testing.png")
