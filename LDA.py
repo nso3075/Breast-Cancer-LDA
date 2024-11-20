@@ -5,9 +5,11 @@ import matplotlib.pyplot as plt
 # Loading the dataset
 data = pd.read_csv("data/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
 
+
 # Separate features and labels
 X = data.iloc[:, 1:].values # features are all the columns minus first column
 y = data.iloc[:, 0].values # features are the first column (diabetes type)
+
 
 # Spit data
 split_ratio = 0.8
