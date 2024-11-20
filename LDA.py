@@ -37,3 +37,13 @@ for c in classes:
     mean_diff = (mean_vectors[c] - mean_overall).reshape(-1, 1)
     # getting sum of num_samples_c * (uc - u)(uc - u)^T by comparing mean sample for class and overall mean sample
     bc_ms += num_samples_c * (mean_diff @ mean_diff.T)
+
+# getting eigenvals and eigenvectors of wc_ms^-1 * bc_ms
+# Using pinv instead of inv so it will give pseudoinverse if real inverse isnt possible to calcuate
+new_mat = np.linalg.pinv(wc_ms) @ bc_ms
+eigenvalues, eigenvectors = np.linalg.eig(new_mat)
+
+# sort the eigenvec and vals so the first one is most important
+sorted_indices = np.argsort(-eigenvalues.real)
+eigvals = eigenvalues[sorted_indices].real
+eigvecs = eigenvectors[:, sorted_indices].real
