@@ -1,0 +1,70 @@
+So this takes pretty long to run but give it like 10-20 minutes or so.
+Also I added a file that only does the RF to check.
+For some reason the RF Accuracy is coming back consistently higher than any of the LDA Accuracies which was not the case when we discussed last if I remember correctly.
+This first output is with the seed thing that I have commented out at the top of LDA_Grid_Search.py
+I just used the seed for testing purposes.
+
+The second run is just it without the seed thing.
+
+And the grid search and what the file name saves to because we can rename it later for clarity:
+LDA Grid Search: lda_accuracy_vs_n_components.png
+Performing Random Forest Grid Search without LDA: rf_accuracy_vs_n_estimators.png
+
+Performing LDA + Random Forest Grid Search:
+with n_components = 1: rf_accuracy_vs_n_estimators_n_components_1.png
+with n_components = 2: rf_accuracy_vs_n_estimators_n_components_2.png
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Processing file: data/diabetes_012_health_indicators_BRFSS2015.csv
+
+Performing LDA Grid Search:
+n_components: 1, Accuracy: 66.15%
+n_components: 2, Accuracy: 65.92%
+
+Performing Random Forest Grid Search without LDA:
+n_estimators: 50, Accuracy: 84.08%
+n_estimators: 100, Accuracy: 84.18%
+n_estimators: 150, Accuracy: 84.26%
+n_estimators: 200, Accuracy: 84.23%
+
+Performing LDA + Random Forest Grid Search:
+
+Random Forest Grid Search with n_components = 1
+n_estimators: 50, Accuracy: 77.88%
+n_estimators: 100, Accuracy: 77.79%
+n_estimators: 150, Accuracy: 77.79%
+n_estimators: 200, Accuracy: 77.80%
+
+Random Forest Grid Search with n_components = 2
+n_estimators: 50, Accuracy: 82.59%
+n_estimators: 100, Accuracy: 82.61%
+n_estimators: 150, Accuracy: 82.69%
+n_estimators: 200, Accuracy: 82.71%
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Processing file: data/diabetes_012_health_indicators_BRFSS2015.csv
+
+Performing LDA Grid Search:
+n_components: 1, Accuracy: 66.21%
+n_components: 2, Accuracy: 66.10%
+
+Performing Random Forest Grid Search without LDA:
+n_estimators: 50, Accuracy: 84.12%
+n_estimators: 100, Accuracy: 84.20%
+n_estimators: 150, Accuracy: 84.26%
+n_estimators: 150, Accuracy: 84.26%
+n_estimators: 200, Accuracy: 84.34%
+
+Performing LDA + Random Forest Grid Search:
+
+Random Forest Grid Search with n_components = 1
+n_estimators: 50, Accuracy: 77.93%
+n_estimators: 100, Accuracy: 77.79%
+n_estimators: 150, Accuracy: 77.79%
+n_estimators: 200, Accuracy: 77.80%
+
+Random Forest Grid Search with n_components = 2
+n_estimators: 50, Accuracy: 82.68%
+n_estimators: 100, Accuracy: 82.75%
+n_estimators: 150, Accuracy: 82.78%
+n_estimators: 200, Accuracy: 82.81%

@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
-# Set a random seed for reproducibility
-np.random.seed(42)
+# Random seed so results are the same, splits are done the same every time
+# np.random.seed(42)
 
 # Function to perform LDA and evaluate performance
 def lda_grid_search(X_train, y_train, X_test, y_test, n_components_list):
@@ -78,7 +78,10 @@ def lda_grid_search(X_train, y_train, X_test, y_test, n_components_list):
     plt.xlabel('Number of Components')
     plt.ylabel('Accuracy (%)')
     plt.grid(True)
-    plt.show()
+
+    # Save plot to a file
+    plt.savefig('lda_accuracy_vs_n_components.png')
+    plt.close()
 
     return accuracies
 
@@ -106,7 +109,9 @@ def rf_grid_search(X_train, y_train, X_test, y_test, n_estimators_list):
     plt.xlabel('Number of Estimators')
     plt.ylabel('Accuracy (%)')
     plt.grid(True)
-    plt.show()
+
+    plt.savefig('rf_accuracy_vs_n_estimators.png')
+    plt.close()
 
     return accuracies
 
@@ -183,7 +188,9 @@ def lda_rf_pipeline(X_train, y_train, X_test, y_test, n_components_list, n_estim
         plt.xlabel('Number of Estimators')
         plt.ylabel('Accuracy (%)')
         plt.grid(True)
-        plt.show()
+
+        plt.savefig(f'rf_accuracy_vs_n_estimators_n_components_{n_components}.png')
+        plt.close()
 
 # Function to process each data file
 def process_data_file(file_path, n_estimators_list):
@@ -226,7 +233,7 @@ def process_data_file(file_path, n_estimators_list):
 # List of data files
 data_files = [
     "data/diabetes_012_health_indicators_BRFSS2015.csv",
-    # Add other data files here
+    # Can add the other data files here, it would be a pain to wait for it all to process though
     # "data/another_dataset.csv",
 ]
 
