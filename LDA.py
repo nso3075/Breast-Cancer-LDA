@@ -100,7 +100,36 @@ print(f"Accuracy: {accuracy * 100:.2f}%")
 # try in 3d space, try in 1d space
 # make classifier and asses in different spaces
 
+# Confusion matrix function
+def conf_matrix(y_pred, y_true, title=None, print_results=True):
+    confusions = np.zeros((3,3), dtype=int)
+    for pred, true in zip(y_pred, y_true):
+        confusions[int(pred)][int(true)] += 1
 
+    # compute the recognition rate
+    inputs_correct = np.sum([confusions[i][i] for i in range(3)])
+    inputs_total = np.sum(confusions)
+    recognition_rate = inputs_correct / inputs_total * 100
+
+    # Print results
+    if print_results:
+        if title:
+            print("\n>>> " + title)
+        print(
+            f"\n    Recognition rate (correct / inputs):\n  {recognition_rate:.2f}%\n"
+        )
+        print("    Confusion Matrix:")
+        print("                 0: Class-0  1: Class-1  2: Class-2")
+        print("     ---------------------------------------------")
+        for i, row in enumerate(confusions):
+            print(
+                f"{i}: Pred-Class-{i} | "
+                + " ".join(f"{val:10d}" for val in row)
+            )
+
+    return confusions, recognition_rate
+# Create Confusion matrix and print it
+conf_matrix(y_pred, y_test, title = "LDA Classifier Results")
 # Save the projected data and the labels into npy files
 np.save("lda_results/X_train_lda.npy", X_train_lda)
 np.save("lda_results/y_train.npy", y_train)
