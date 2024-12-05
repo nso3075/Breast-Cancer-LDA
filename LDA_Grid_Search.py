@@ -8,27 +8,6 @@ sd = 42
 np.random.seed(sd)
 
 
-# # Generic function to compute accuracy and plot results
-# def plot(X_train, y_train, X_test, y_test, param_list, model_name, search_fn):
-#     accuracies = []
-
-#     for param in param_list:
-#         accuracy = search_fn(X_train, y_train, X_test, y_test, param)
-#         accuracies.append(accuracy)
-#         print(f"{model_name} Param: {param}, Accuracy: {accuracy * 100:.2f}%")
-
-#     # Plotting accuracy vs parameter
-#     plt.figure(figsize=(10, 6))
-#     plt.plot(param_list, [a * 100 for a in accuracies], marker='o')
-#     plt.title(f'{model_name} Accuracy vs Parameter')
-#     plt.xlabel('Parameter')
-#     plt.ylabel('Accuracy (%)')
-#     plt.grid(True)
-#     plt.savefig(f'{model_name.lower()}_accuracy_vs_parameter.png')
-#     plt.close()
-
-#     return accuracies
-
 # Function to perform LDA transformation
 def perform_lda(X_train, y_train, X_test):
     classes = np.unique(y_train)
@@ -93,25 +72,36 @@ def plot_accuracies(x_values, accuracies, xlabel, ylabel, title, label=None):
     if label:
         plt.legend()
 
+def plot_accuracies_bar(rf_data):
+    categories = list(rf_data.keys())
+    values = list(rf_data.values())
+
+    # Create the bar plot
+    plt.figure(figsize=(8, 5))
+    plt.bar(categories, values, color='skyblue', edgecolor='black')
+
+    # Add labels and title
+    plt.xlabel('Category')
+    plt.ylabel('Accuracy')
+    plt.title('Accuracy for Different Categories')
+    plt.ylim(0.75, 0.85)  # Set minimum y-axis limit for better focus
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+    # Show plot
+    plt.savefig("accuracies_rf_bar.png")
+
 
 # Function to combine LDA and Random Forest in a pipeline
 def lda_rf_pipeline(X_train, y_train, X_test, y_test, n_components_list, n_estimators_list):
+    rf_data = {}
     classes = np.unique(y_train)
     max_components = min(len(classes) - 1, X_train.shape[1])
     
     compute_projection = perform_lda(X_train, y_train, X_test)
-    # for n_components in n_components_list:
-        
-    #     n_components = min(n_components, max_components)
-    #     X_train_lda, X_test_lda = compute_projection(n_components)
-        
-    #     lda_search_fn(X_train_lda, y_train, X_test_lda, y_test)
-        
-    #     for n in n_estimators_list:
-    #         rf_search_fn(X_train_lda, y_train, X_test_lda, y_test, n_estimators = n)
 
     lda_accuracies = []
     for n_components in n_components_list:
+        print(f"Testing LDA with {n_components} components")
         X_train_lda, X_test_lda = compute_projection(n_components)
         acc = lda_search_fn(X_train_lda, y_train, X_test_lda, y_test)
         lda_accuracies.append(acc)
@@ -120,19 +110,32 @@ def lda_rf_pipeline(X_train, y_train, X_test, y_test, n_components_list, n_estim
     
 
     # RF Accuracy Plot with Overlays
+    rf_no_lda_accuracies = []
     for n_estimators in n_estimators_list:
+        rf_no_lda_acc = rf_search_fn(X_train, y_train, X_test, y_test, n_estimators)
+        rf_no_lda_accuracies.append(rf_no_lda_acc)
+        if n_estimators == max(n_estimators_list): rf_data["No LDA"] = rf_no_lda_acc
         rf_accuracies = []
         for n_components in n_components_list:
+            print(f"Testing RFxLDA with {n_components} components and {n_estimators} estimators")
             X_train_lda, X_test_lda = compute_projection(n_components)
             acc = rf_search_fn(X_train_lda, y_train, X_test_lda, y_test, n_estimators)
+            if n_estimators == max(n_estimators_list): rf_data[n_components] = acc
             rf_accuracies.append(acc)
 
         plot_accuracies(n_components_list, rf_accuracies, "Number of Components", "Accuracy",
                         f"RF Accuracy (n_estimators={n_estimators}) vs LDA", label=f"RF (n={n_estimators})")
         
-        plt.legend()
-        plt.savefig("lda_rf_accuracy_comparison.png")
-        plt.show()
+    plt.legend()
+    plt.savefig("lda_rf_accuracy_comparison.png")
+    plt.show()
+
+
+    for i, acc in enumerate(rf_no_lda_accuracies):
+        print(f"RF with no LDA (n_estimators={n_estimators_list[i]}) accuracy: {acc}\n")
+    
+    plot_accuracies_bar(rf_data)
+
 
 # Function to process data file and apply searches
 def process_data_file(file_path, n_estimators_list):
@@ -149,7 +152,7 @@ def process_data_file(file_path, n_estimators_list):
     y_train, y_test = y[indices[:split_index]], y[indices[split_index:]]
 
     classes = np.unique(y_train)
-    max_components = 10#min(len(classes) - 1, X_train.shape[1])
+    max_components = 11#min(len(classes) - 1, X_train.shape[1])
     n_components_list = list(range(1, max_components + 1))
 
     # print("\nLDA Grid Search:")
@@ -165,7 +168,10 @@ def process_data_file(file_path, n_estimators_list):
 data_files = [
     "data/diabetes_012_health_indicators_BRFSS2015.csv"
 ]
-n_estimators_list = [50, 100, 150, 200]
+n_estimators_list = [25, 50, 100]
 
 for file_path in data_files:
     process_data_file(file_path, n_estimators_list)
+
+
+    
