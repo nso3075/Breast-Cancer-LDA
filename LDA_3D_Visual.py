@@ -32,20 +32,47 @@ def lda_rf_classifier(grid_points):
 
 # Generate 3D Contours
 def draw_contours(data_matrix, class_fn, title, file_name):
+    # Determine the range for the plot
     x_min, x_max = data_matrix[:, 0].min() - 1, data_matrix[:, 0].max() + 1
     y_min, y_max = data_matrix[:, 1].min() - 1, data_matrix[:, 1].max() + 1
 
+    # Generate a grid of points
     x = np.linspace(x_min, x_max, 100)
     y = np.linspace(y_min, y_max, 100)
     xx, yy = np.meshgrid(x, y)
     grid_points = np.c_[xx.ravel(), yy.ravel()]
+
+    # Compute the decision boundaries
     Z = class_fn(grid_points)[:, -1].reshape(xx.shape)
 
+    # Create the 3D plot
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+
+    # Plot the decision boundary as a surface
     ax.plot_surface(xx, yy, Z, cmap='coolwarm', edgecolor='none', alpha=0.7)
+
+    # Create scatter plot for individual data points
+    classes = np.unique(data_matrix[:, -1]) # Get unique class labels
+    for cls in classes:
+        # Filter the points belonging to current class
+        cls_points = data_matrix[data_matrix[:, -1] == cls]
+
+        # Plot the points below the decision surface
+        ax.scatter(
+            cls_points[:, 0], # X coordinates
+            cls_points[:, 1], # Y coordinates
+            np.full(cls_points.shape[0], cls), # Z coordinate
+            label = f"Class {int(cls)}", # Label for the legend
+            s = 20, # Marker size
+        )
+    # Add title and legend to plot
     ax.set_title(title)
+    ax.legend()
+
+    # Save the plot as an img
     plt.savefig(file_name)
+    # Display the plot
     plt.show()
 
 # Generate Contours for Train and Test Sets
