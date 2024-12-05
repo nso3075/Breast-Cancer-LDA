@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import joblib
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
@@ -85,3 +86,14 @@ y_pred = rf_classifier.predict(X_test_lda)
 # Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy * 100:.2f}%")
+
+
+# Save projected test data, predictions, and the RF classifier
+np.save("lda_results/X_train_lda_rf.npy", X_test_lda)
+np.save("lda_results/y_train_rf.npy", y_train)
+np.save("lda_results/X_test_lda_rf.npy", X_test_lda)
+np.save("lda_results/y_test_rf.npy", y_test)
+np.save("lda_results/y_pred_rf.npy", y_pred)
+
+joblib.dump(rf_classifier, "lda_results/rf_classifier.pkl")
+print("LDA and RF results saved")

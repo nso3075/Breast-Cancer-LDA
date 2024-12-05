@@ -100,3 +100,10 @@ print(f"Accuracy: {accuracy * 100:.2f}%")
 # try in 3d space, try in 1d space
 # make classifier and asses in different spaces
 
+
+# Save the projected data and the labels into npy files
+np.save("lda_results/X_train_lda.npy", X_train_lda)
+np.save("lda_results/y_train.npy", y_train)
+np.save("lda_results/X_test_lda.npy", X_test_lda)
+np.save("lda_results/y_test.npy", y_test)
+print("LDA Results Saved.")
