@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 
 sd = 42
 np.random.seed(sd)
-
+colors = ['#008080', '#0373d3', '#816cce', '#00ebeb', '#9fa6e9', '#2f1c91']
 
 # Function to perform LDA transformation
 def perform_lda(X_train, y_train, X_test):
@@ -64,16 +64,23 @@ def rf_search_fn(X_train, y_train, X_test, y_test, n_estimators):
     return accuracy_score(y_test, y_pred)
 
 def plot_accuracies(x_values, accuracies, xlabel, ylabel, title, label=None):
-    plt.plot(x_values, accuracies, marker='o', label=label)
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
-    plt.grid(True)
+    #plt.figure(facecolor='#120e24ff')
+
+    plt.plot(x_values, accuracies, marker='o', label=label, color=colors[-1])
+    colors.pop()
+    
+    plt.xlabel(xlabel, color='white', fontsize=12)
+    plt.ylabel(ylabel, color='white', fontsize=12)
+    plt.title(title, color='white', fontsize=14)
+
+    plt.grid(True, linestyle='--', color='gray', alpha=0.6)
+
     if label:
         plt.legend()
 
 def plot_accuracies_bar(rf_data):
     categories = list(rf_data.keys())
+    categories = [str(key) for key in rf_data.keys()]
     values = list(rf_data.values())
 
     # Create the bar plot
@@ -81,13 +88,13 @@ def plot_accuracies_bar(rf_data):
     plt.bar(categories, values, color='skyblue', edgecolor='black')
 
     # Add labels and title
-    plt.xlabel('Category')
+    plt.xlabel('Number of Components')
     plt.ylabel('Accuracy')
-    plt.title('Accuracy for Different Categories')
+    plt.title('RF Accuracy With/Without LDA Reduction')
     plt.ylim(0.75, 0.85)  # Set minimum y-axis limit for better focus
     plt.grid(axis='y', linestyle='--', alpha=0.7)
 
-    # Show plot
+    # saving plot
     plt.savefig("accuracies_rf_bar.png")
 
 
@@ -98,13 +105,16 @@ def lda_rf_pipeline(X_train, y_train, X_test, y_test, n_components_list, n_estim
     max_components = min(len(classes) - 1, X_train.shape[1])
     
     compute_projection = perform_lda(X_train, y_train, X_test)
-
+    plt.figure(facecolor='#19528a')
     lda_accuracies = []
     for n_components in n_components_list:
         print(f"Testing LDA with {n_components} components")
         X_train_lda, X_test_lda = compute_projection(n_components)
         acc = lda_search_fn(X_train_lda, y_train, X_test_lda, y_test)
         lda_accuracies.append(acc)
+    
+    
+
     plot_accuracies(n_components_list, lda_accuracies, "Number of Components", "Accuracy",
                     "LDA Accuracy by Number of Components", label="LDA")
     
@@ -122,13 +132,14 @@ def lda_rf_pipeline(X_train, y_train, X_test, y_test, n_components_list, n_estim
             acc = rf_search_fn(X_train_lda, y_train, X_test_lda, y_test, n_estimators)
             if n_estimators == max(n_estimators_list): rf_data[n_components] = acc
             rf_accuracies.append(acc)
-
+        
         plot_accuracies(n_components_list, rf_accuracies, "Number of Components", "Accuracy",
                         f"RF Accuracy (n_estimators={n_estimators}) vs LDA", label=f"RF (n={n_estimators})")
         
     plt.legend()
+    
     plt.savefig("lda_rf_accuracy_comparison.png")
-    plt.show()
+    #plt.show()
 
 
     for i, acc in enumerate(rf_no_lda_accuracies):
@@ -152,7 +163,7 @@ def process_data_file(file_path, n_estimators_list):
     y_train, y_test = y[indices[:split_index]], y[indices[split_index:]]
 
     classes = np.unique(y_train)
-    max_components = 11#min(len(classes) - 1, X_train.shape[1])
+    max_components = 3#min(len(classes) - 1, X_train.shape[1])
     n_components_list = list(range(1, max_components + 1))
 
     # print("\nLDA Grid Search:")
