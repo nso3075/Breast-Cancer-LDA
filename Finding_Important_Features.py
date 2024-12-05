@@ -27,11 +27,27 @@ feature_importance_df = pd.DataFrame({
 feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
 print(feature_importance_df)
 
+# Configure dark theme
+plt.style.use('dark_background')
 plt.figure(figsize=(10, 6))
-plt.barh(feature_importance_df['Feature'], feature_importance_df['Importance'], color='skyblue')
-plt.xlabel('Importance')
-plt.ylabel('Feature')
-plt.title('Feature Importance from Random Forest')
+plt.barh(
+    feature_importance_df['Feature'], 
+    feature_importance_df['Importance'], 
+    color='#00cadaff', 
+    #edgecolor='white'
+)
+plt.xlabel('Importance', color='white')
+plt.ylabel('Feature', color='white')
+plt.title('Feature Importance from Random Forest', color='white')
+
+# Set background color
 plt.gca().invert_yaxis()
+plt.gcf().patch.set_facecolor('#120e24ff')  # Background for the figure
+
+# Rotate y-axis labels for better visibility
+plt.yticks(rotation=45, color='white')
+
 plt.show()
-plt.savefig("Feature Importance")
+
+# Save the figure
+plt.savefig("Feature_Importance_Dark.png", facecolor='#120e24ff')

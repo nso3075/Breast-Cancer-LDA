@@ -56,7 +56,7 @@ eigvals = eigenvalues[sorted_indices].real
 eigvecs = eigenvectors[:, sorted_indices].real
 
 # Project the data onto top two eigenvectors (for 2D visualization)
-W2 = eigvecs[:, :2]
+W2 = eigvecs[:, :3]
 W10 = eigvecs[:, :10]
 
 X_train_lda = X_train_norm @ W2
@@ -75,13 +75,18 @@ plt.ylabel("LD2")
 plt.savefig("lda_projection_2D.png")
 plt.close()
 
-# Random Forest classifier with LDA projected data
-rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
-rf_classifier.fit(X_train_lda, y_train)
+for i in range(15):
+    if i == 0: continue
+    W2 = eigvecs[:, :i]
 
-# Make predictions on the test set
-y_pred = rf_classifier.predict(X_test_lda)
+    X_train_lda = X_train_norm @ W2
+    X_test_lda = (X_test - mean_overall) @ W2
+    # Random Forest classifier with LDA projected data
+    rf_classifier = RandomForestClassifier(n_estimators=20, random_state=42)
+    rf_classifier.fit(X_train, y_train)
 
-# Calculate accuracy
-accuracy = accuracy_score(y_test, y_pred)
-print(f"Accuracy: {accuracy * 100:.2f}%")
+    # Make predictions on the test set
+    y_pred = rf_classifier.predict(X_test)
+
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Accuracy ({i} eigenvectors): {accuracy * 100:.2f}%")
