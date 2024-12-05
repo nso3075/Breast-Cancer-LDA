@@ -105,7 +105,7 @@ def lda_rf_pipeline(X_train, y_train, X_test, y_test, n_components_list, n_estim
     max_components = min(len(classes) - 1, X_train.shape[1])
     
     compute_projection = perform_lda(X_train, y_train, X_test)
-    plt.figure(facecolor='#19528a')
+    plt.figure(facecolor='#120e24ff')
     lda_accuracies = []
     for n_components in n_components_list:
         print(f"Testing LDA with {n_components} components")
