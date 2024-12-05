@@ -89,7 +89,7 @@ print(f"Accuracy: {accuracy * 100:.2f}%")
 
 
 # Save projected test data, predictions, and the RF classifier
-np.save("lda_results/X_train_lda_rf.npy", X_test_lda)
+np.save("lda_results/X_train_lda_rf.npy", X_train_lda)
 np.save("lda_results/y_train_rf.npy", y_train)
 np.save("lda_results/X_test_lda_rf.npy", X_test_lda)
 np.save("lda_results/y_test_rf.npy", y_test)
