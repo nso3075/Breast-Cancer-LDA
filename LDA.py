@@ -118,15 +118,15 @@ def conf_matrix(y_pred, y_true, title=None, print_results=True):
         print(
             f"\n    Recognition rate (correct / inputs):\n  {recognition_rate:.2f}%\n"
         )
-        print("    Confusion Matrix:")
-        print("                 0: Class-0  1: Class-1  2: Class-2")
+        print("\tConfusion Matrix:")
+        print("\t\t| 0: No Diabetes | 1: Type One | 2: Type Two")
         print("     ---------------------------------------------")
         for i, row in enumerate(confusions):
             print(
                 f"{i}: Pred-Class-{i} | "
                 + " ".join(f"{val:10d}" for val in row)
             )
-
+    print("\n\n")
     return confusions, recognition_rate
 # Create Confusion matrix and print it
 conf_matrix(y_pred, y_test, title = "LDA Classifier Results")

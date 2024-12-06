@@ -87,6 +87,37 @@ y_pred = rf_classifier.predict(X_test_lda)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy * 100:.2f}%")
 
+# CREATE CONFUSION MATRIX HERE
+def conf_matrix(y_pred, y_true, title=None, print_results=True):
+    # Initialize conf matrix for classes
+    confusions = np.zeros((3,3), dtype=int)
+    for pred, true in zip(y_pred, y_true):
+        confusions[int(pred)][int(true)] += 1
+
+    # Recog rate
+    inputs_correct = np.sum([confusions[i][i] for i in range(3)])
+    inputs_total = np.sum(confusions)
+    recog_rate = inputs_correct / inputs_total * 100
+
+    # Print
+    if print_results:
+        if title:
+           print("\n>>> " + title)
+        print(
+            f"\n    Recognition rate (correct / inputs):\n    {recog_rate:.2f}%\n"
+        )
+        print("\tConfusion Matrix:")
+        print("\t\t| 0: No Diabetes | 1: Type One | 2: Type Two")
+        print("    ---------------------------------------------")
+        for i, row in enumerate(confusions):
+            print(
+                f"{i}: Pred-Class-{i} | "
+                + " ".join(f"{val:10d}" for val in row)
+            )
+        print("\n\n")
+    return confusions, recog_rate 
+
+conf_matrix(y_pred, y_test, title="LDA + RF Classifier Results")
 
 # Save projected test data, predictions, and the RF classifier
 np.save("lda_results/X_train_lda_rf.npy", X_train_lda)
