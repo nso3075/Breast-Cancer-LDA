@@ -46,15 +46,15 @@ for c in classes:
     class_data = X_train[y_train == c]
     mean_c = mean_vectors[c].reshape(-1, 1)
 
-    # Within-class scatter matrix
+    # Within-class scatter matrix contribution
     wc_ms += np.sum([(x.reshape(-1, 1) - mean_c) @ (x.reshape(-1, 1) - mean_c).T for x in class_data], axis=0)
 
-    # Between-class scatter matrix
+    # Between-class scatter matrix contribution
     num_samples_c = len(class_data)
     mean_diff = (mean_vectors[c] - mean_overall).reshape(-1, 1)
     bc_ms += num_samples_c * (mean_diff @ mean_diff.T)
 
-# Getting eigenvals and eigenvectors of wc_ms^-1 * bc_ms
+# getting eigenvals and eigenvectors of wc_ms^-1 * bc_ms
 # Using pinv instead of inv so it will give pseudoinverse if real inverse isnt possible to calcuate
 new_mat = np.linalg.pinv(wc_ms) @ bc_ms
 eigenvalues, eigenvectors = np.linalg.eig(new_mat)
