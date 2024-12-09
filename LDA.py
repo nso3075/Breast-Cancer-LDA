@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+np.random.seed(42)
+
+
 # Loading the dataset
 data = pd.read_csv("data/diabetes_012_health_indicators_BRFSS2015.csv")
 
